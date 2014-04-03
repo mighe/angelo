@@ -77,6 +77,7 @@ end
 
 require 'angelo/version'
 require 'angelo/params_parser'
+require 'angelo/server/mixin'
 require 'angelo/server'
 require 'angelo/base'
 require 'angelo/responder'

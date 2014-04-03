@@ -12,11 +12,14 @@ module Angelo
 
     @@ping_time = DEFAULT_PING_TIME
 
+    @@pool = false
+
     if ARGV.any? and not Kernel.const_defined?('Minitest')
       require 'optparse'
       OptionParser.new { |op|
-        op.on('-p port',   'set the port (default is 4567)')      { |val| @@port = Integer(val) }
-        op.on('-o addr',   "set the host (default is #{@@addr})") { |val| @@addr = val }
+        op.on('-p port', 'set the port (default is 4567)')      { |val| @@port = Integer(val) }
+        op.on('-o addr', "set the host (default is #{@@addr})") { |val| @@addr = val }
+        op.on('-c',      "launch a pool of reactors to handle requests") { |val| @@pool = val }
       }.parse!(ARGV.dup)
     end
 
@@ -96,8 +99,8 @@ module Angelo
         Responder.content_type type
       end
 
-      def run addr = @@addr, port = @@port
-        @server = Angelo::Server.new self, addr, port
+      def run addr = @@addr, port = @@port, pool = @@pool
+        @server = Angelo::Server.new self, addr, port, pool
         @server.async.ping_websockets
         trap "INT" do
           @server.terminate if @server and @server.alive?

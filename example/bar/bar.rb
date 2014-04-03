@@ -8,6 +8,8 @@ require 'angelo'
 require 'angelo/tilt/erb'
 require 'angelo/mustermann' unless RUBY_PLATFORM == 'java'
 
+Celluloid.logger.level = ::Logger::INFO
+
 class Foo < Angelo::Base
   include Angelo::Tilt::ERB
   include Angelo::Mustermann unless RUBY_PLATFORM == 'java'
@@ -15,6 +17,11 @@ class Foo < Angelo::Base
   HEART = '<3'
   @@ping_time = 3
   @@hearting = false
+  PONG = ''
+
+  get '/p' do
+    PONG
+  end
 
   get '/' do
     redirect '/index'
