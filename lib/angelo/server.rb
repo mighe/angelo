@@ -45,8 +45,8 @@ module Angelo
     private
 
     def dispatch! meth, connection, request
-      if staticable?(meth) and lp = @base.local_path(request.path)
-        static! meth, connection, request, lp
+      if staticable?(meth) and @base.public_file?(request.path)
+        static! meth, connection, request, @base.local_path(request.path)
       else
         route! meth, connection, request
       end

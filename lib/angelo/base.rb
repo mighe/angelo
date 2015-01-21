@@ -71,7 +71,8 @@ module Angelo
       def public_dir d = nil
         @public_dir = d if d
         @public_dir ||= DEFAULT_PUBLIC_DIR
-        File.join root, @public_dir
+        @public_dir = Array(@public_dir)
+        @public_dir.map { |path| File.join root, path }
       end
 
       def report_errors!
@@ -185,10 +186,11 @@ module Angelo
       end
 
       def local_path path
-        if public_dir
-          lp = File.join(public_dir, path)
-          File.file?(lp) ? lp : nil
-        end
+        public_dir.map { |dir| File.join(dir, path) }.find { |complete_path| File.file?(complete_path) }
+      end
+
+      def public_file? path
+        local_path(path) != nil
       end
 
       def sse_event event_name, data

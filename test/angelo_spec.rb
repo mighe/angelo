@@ -543,13 +543,13 @@ describe Angelo::Base do
     describe 'public_dir' do
 
       define_app do
-        public_dir 'sucka'
-        get('/'){ self.class.public_dir }
+        public_dir ['dir_1', 'dir_2']
+        get('/'){ self.class.public_dir.join ' ' }
       end
 
       it 'sets dir for public files' do
         get '/'
-        last_response_must_be_html File.join(@server.base.root, 'sucka')
+        last_response_must_be_html "#{File.join(@server.base.root, 'dir_1')} #{File.join(@server.base.root, 'dir_2')}"
       end
 
     end
